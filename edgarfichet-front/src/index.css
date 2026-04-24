@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Handvetica';
+  src: url('/fonts/HandveticaTrial.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Terminal-Grotesque';
+  src: url('/fonts/Terminal-Grotesque.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'WC_RoughTrad';
+  src: url('/fonts/WC_RoughTrad.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body, #root {
+  height: 100%;
+  background-color: black;
+}
+
+body {
+  margin: 0;
+
+}
+

@@ -1,0 +1,17 @@
+FROM wordpress:6.6-php8.2-apache
+
+# Supprimer les thèmes inutiles
+RUN rm -rf /var/www/html/wp-content/themes/twentytwentyfour \
+    && rm -rf /var/www/html/wp-content/themes/twentytwentythree \
+    && rm -rf /var/www/html/wp-content/themes/twentytwentytwo
+
+# Supprimer les plugins inutiles
+RUN rm -rf /var/www/html/wp-content/plugins/akismet \
+    && rm -rf /var/www/html/wp-content/plugins/hello.php \
+    && rm -f /var/www/html/wp-content/plugins/hello.php
+
+# Copier le plugin custom
+COPY plugins-to-add/film-post-types.php /var/www/html/wp-content/plugins/film-post-types/film-post-types.php
+
+# Permissions
+RUN chown -R www-data:www-data /var/www/html/wp-content

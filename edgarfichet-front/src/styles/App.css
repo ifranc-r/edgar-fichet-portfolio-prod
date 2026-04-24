@@ -1,0 +1,439 @@
+:root {
+  --poster-enter-fast-ms: 420ms;
+  --poster-cruise-ms: 9000ms;
+  --poster-exit-fast-ms: 420ms;
+  --poster-enter-x: -120vw;
+  --poster-cruise-from-x: -1000vw;
+  --poster-cruise-to-x: -2500vw;
+  --poster-exit-x: 120vw;
+}
+html, body {
+  background-color: #000;
+}
+
+/* TOP BAR */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  z-index: 100;
+}
+
+.topbar--hidden {
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.topbar--visible {
+  display: flex;
+  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.topbarLeft {
+  flex: 1;
+}
+
+.topbarTitle {
+  font-family: 'Terminal-Grotesque', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0;
+  color: #fff;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.topbarRight {
+  flex: 1;
+  text-align: right;
+}
+
+.topbarCta {
+  font-family: 'Terminal-Grotesque', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  font-size: 1.25rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.topbarCta:hover .topbarCtaText {
+  color: red;
+  display: inline-block;
+  -moz-transform: scale(-1, -1);
+  -webkit-transform: scale(-1, -1);
+  -o-transform: scale(-1, -1);
+  -ms-transform: scale(-1, -1);
+  transform: scale(-1, -1);
+  cursor: pointer;
+}
+
+.topbarCta.active .topbarCtaText {
+  color: red;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.topbarCta:active .topbarCtaText {
+  color: red;
+  display: inline-block;
+  -moz-transform: scale(-1, -1);
+  -webkit-transform: scale(-1, -1);
+  -o-transform: scale(-1, -1);
+  -ms-transform: scale(-1, -1);
+  transform: scale(-1, -1);
+  cursor: pointer;
+}
+
+/* INTRO */
+
+.intro {
+  cursor: pointer;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  position: relative;
+  margin-top: 50px;
+}
+.intro:active .introCenter {
+  transform: scale(0.995);
+}
+
+.introCenter {
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.introName {
+  font-family: 'WC_RoughTrad', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  font-size: clamp(3rem, 1vw, 6rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.introRole {
+  font-family: 'Terminal-Grotesque', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  margin-top: -0.5rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.35em;
+  opacity: 0.75;
+}
+
+.introLine {
+  position: absolute;
+  bottom: -10vh;
+  left: 50%;
+  width: 2px;
+  height: 50vh;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* Page */
+.page {
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+}
+
+.wrap {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 7rem;
+}
+
+.error {
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.12);
+  color: #fecaca;
+  border-radius: 0.75rem;
+}
+
+.filmTypeTitle {
+  font-family: 'Terminal-Grotesque', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  font-size: 5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 3rem 0 2rem 0;
+  color: #fff;
+  font-weight: 400;
+  opacity: 0.9;
+  text-align: center;
+  margin-top: 750px;
+  margin-bottom: 750px;
+}
+
+.filmTypeTitle:hover {
+  display: relative;
+  color: red;
+  font-size: 6rem;
+  -moz-transform: scale(-1, -1);
+  -webkit-transform: scale(-1, -1);
+  -o-transform: scale(-1, -1);
+  -ms-transform: scale(-1, -1);
+  transform: scale(-1, -1);
+}
+
+.topbarArrow {
+  letter-spacing: -1.5px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  text-align: center;
+}
+
+.title {
+  margin-top: 25px;
+  font-family: 'Handvetica', sans-serif;
+  font-size: 5rem;
+  font-style: normal;
+  font-weight: normal;
+  font-synthesis: none;
+  letter-spacing: -0.5rem;
+  margin-bottom: 10px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.meta {
+  font-family: 'Terminal-Grotesque', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.5rem;
+  opacity: 0.7;
+  font-size: 1rem;
+}
+
+.metaDefault {
+  display: inline;
+}
+.metaHover {
+  display: none;
+}
+
+.item.isHover .metaDefault {
+  display: none;
+}
+.item.isHover .metaHover {
+  display: inline;
+}
+
+/* Overlay */
+.posterOverlay {
+  position: fixed;
+  left: 50%;
+  z-index: 50;
+  pointer-events: none;
+  will-change: transform, opacity, filter;
+}
+
+.posterCard {
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 6px 3px rgb(0, 0, 0);
+}
+
+.posterImg {
+  display: block;
+  width: 170px;
+  height: 240px;
+  object-fit: cover;
+}
+
+.item.isHover .title {
+  position: relative;
+  z-index: 100;
+  mix-blend-mode: difference;
+  color: transparent;
+  cursor: pointer;
+}
+
+.item.isHover .meta {
+  position: relative;
+  z-index: 100;
+  /* mix-blend-mode: difference; */
+  gap: 2rem 2rem;
+  font-size: 1rem;
+  color: white;
+  opacity: 1;
+  text-shadow: 
+    2px 2px 9px black, 
+    -2px -2px 9px black, 
+    2px -2px 9px black, 
+    -2px 2px 9px black;
+}
+
+/* Film Details Popup */
+.popupBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.filmPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  padding: 2rem;
+  max-width: 800px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 1000;
+  color: #fff;
+  font-family: 'Terminal-Grotesque', sans-serif;
+}
+
+.popupClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 1001;
+}
+
+.popupClose:hover {
+  opacity: 0.7;
+}
+
+.popupContainer {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.popupImage {
+  flex-shrink: 0;
+  width: 280px;
+  height: 350px;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.popupImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.popupContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.popupContent h2 {
+  font-family: 'Handvetica', sans-serif;
+  font-size: 2.5rem;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: -0.3rem;
+  font-weight: normal;
+}
+
+.popupDescription {
+  margin-bottom: 2rem;
+  flex: 1;
+}
+
+.popupDescription strong {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
+.popupDescription p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  opacity: 0.85;
+  margin: 0;
+}
+
+.popupFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 1px solid #333;
+  padding-top: 1rem;
+}
+
+.popupFooter p {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.popupFooter strong {
+  opacity: 0.8;
+}
