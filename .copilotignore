@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+.cache
+.next
+coverage
+*.log
+uploads
+videos
+assets/raw
