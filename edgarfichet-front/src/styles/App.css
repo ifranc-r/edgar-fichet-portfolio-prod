@@ -6,6 +6,8 @@
   --poster-cruise-from-x: -1000vw;
   --poster-cruise-to-x: -2500vw;
   --poster-exit-x: 120vw;
+  --poster-presentation-width: 600px;
+  --poster-fallback-width: 300px;
 }
 html, body {
   background-color: #000;
@@ -131,7 +133,6 @@ html, body {
   display: grid;
   place-items: center;
   position: relative;
-  margin-top: 50px;
 }
 .intro:active .introCenter {
   transform: scale(0.995);
@@ -147,7 +148,7 @@ html, body {
   font-family: 'WC_RoughTrad', sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
-  font-size: clamp(3rem, 1vw, 6rem);
+  font-size: clamp(5rem, 1vw, 6rem);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -164,12 +165,13 @@ html, body {
 
 .introLine {
   position: absolute;
-  bottom: -10vh;
+  bottom: -10.5vh;
   left: 50%;
   width: 2px;
-  height: 50vh;
+  height: 70vh;
   transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.55);
+  margin-bottom: -286px;
 }
 
 /* Page */
@@ -182,7 +184,7 @@ html, body {
 .wrap {
   max-width: 72rem;
   margin: 0 auto;
-  padding: 5rem 1.5rem 7rem;
+  padding: 16rem 1.5rem 7rem;
 }
 
 .error {
@@ -198,7 +200,7 @@ html, body {
   font-family: 'Terminal-Grotesque', sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
-  font-size: 5rem;
+  font-size: 7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   margin: 3rem 0 2rem 0;
@@ -206,8 +208,9 @@ html, body {
   font-weight: 400;
   opacity: 0.9;
   text-align: center;
-  margin-top: 750px;
-  margin-bottom: 750px;
+  margin-top: 240px;
+  margin-bottom: 100px;
+  color: red;
 }
 
 .filmTypeTitle:hover {
@@ -291,17 +294,29 @@ html, body {
 
 .posterImg {
   display: block;
-  width: 170px;
-  height: 240px;
+  height: auto;
   object-fit: cover;
+}
+
+.posterCard.presentationPoster .posterImg {
+  width: var(--poster-presentation-width);
+}
+
+.posterCard.fallbackPoster .posterImg {
+  width: var(--poster-fallback-width);
 }
 
 .item.isHover .title {
   position: relative;
   z-index: 100;
   mix-blend-mode: difference;
-  color: transparent;
+  color: #fff;
+  opacity: 0;
   cursor: pointer;
+}
+
+.item.isHover.hasPresentation .title {
+  opacity: 1;
 }
 
 .item.isHover .meta {

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../wp-headless"
+		},
+		{
+			"path": "../edgarfichet-fullstack"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}

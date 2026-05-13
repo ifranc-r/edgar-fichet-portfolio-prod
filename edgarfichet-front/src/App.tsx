@@ -53,15 +53,14 @@ export default function App() {
 
   // Map category values to display labels
   const categoryLabels: { [key: string]: string } = {
-    'Film': 'Film',
-    'Pub': 'Pub',
-    'Clip': 'Clip',
-    'Cours-Metrage': 'Cours-Metrage',
+    'Film': 'Fiction',
+    'Pub': 'Publicités',
+    'Clip': 'Clips',
     'Théatre': 'Théatre'
   };
 
   // Define the order of categories to display
-  const categoryOrder = ['Film', 'Cours-Metrage', 'Pub', 'Clip', 'Théatre'];
+  const categoryOrder = ['Film', 'Pub', 'Clip', 'Théatre'];
   const orderedCategories = categoryOrder.filter(category => filmsByCategory[category]);
 
   // Initialize poster container on mount
@@ -124,7 +123,14 @@ export default function App() {
     const rect = itemEl.getBoundingClientRect();
     const top = rect.top + rect.height / 2;
 
-    enterPoster(film.id, film.poster, top);
+    const imageUrl = film.image_presentation ?? film.poster;
+    if (!imageUrl) {
+      console.warn('App hover missing image_presentation for film:', film.id, film);
+      return;
+    }
+
+    const isPresentation = !!film.hasRealPresentation;
+    enterPoster(film.id, imageUrl, top, isPresentation);
   };
 
   const handleMouseLeave = (film: any, itemEl: HTMLElement) => {
@@ -186,13 +192,7 @@ export default function App() {
             className={`topbarCta ${activeCategory === 'Film' ? 'active' : ''}`}
             onClick={() => scrollToCategory('Film')}
           >
-            <span className="topbarCtaText">Films</span> <span className="topbarArrow">{getCategoryIndicator('Film')}</span>
-          </p>
-          <p 
-            className={`topbarCta ${activeCategory === 'Cours-Metrage' ? 'active' : ''}`}
-            onClick={() => scrollToCategory('Cours-Metrage')}
-          >
-            <span className="topbarCtaText">Cours-Metrage</span> <span className="topbarArrow">{getCategoryIndicator('Cours-Metrage')}</span>
+            <span className="topbarCtaText">Fiction</span> <span className="topbarArrow">{getCategoryIndicator('Film')}</span>
           </p>
           <p 
             className={`topbarCta ${activeCategory === 'Pub' ? 'active' : ''}`}
@@ -237,14 +237,19 @@ export default function App() {
                 {filmsByCategory[category].map((film: any) => (
                   <div
                     key={film.id}
-                    className="item"
+                    className={`item ${film.hasRealPresentation ? 'hasPresentation' : ''}`}
                     ref={(el) => {
                       if (el) itemRefs.current[film.id] = el;
                     }}
                     onMouseEnter={() => handleMouseEnter(film, itemRefs.current[film.id]!)}
                     onMouseLeave={() => handleMouseLeave(film, itemRefs.current[film.id]!)}
                   >
-                    <h3 className="title" onClick={() => setSelectedFilm(film)}>{film.title}</h3>
+                    <h3
+                      className="title"
+                      onClick={() => setSelectedFilm(film)}
+                    >
+                      {film.title}
+                    </h3>
                     <div className="meta">
                       <span className="metaDefault">{film.director} •  {film.year}</span>
                       <span className="metaHover">

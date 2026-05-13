@@ -160,7 +160,7 @@
 }
 
 .hoverPoster img {
-  width: 250px;
+  width: var(--poster-hover-width, 250px);
   height: auto;
   object-fit: cover;
   border-radius: 8px;
@@ -191,7 +191,7 @@
   }
 
   .hoverPoster img {
-    width: 180px;
+    width: var(--poster-hover-width, 180px);
   }
 
   .category-section {
@@ -227,6 +227,6 @@
   }
 
   .hoverPoster img {
-    width: 150px;
+    width: var(--poster-hover-width, 150px);
   }
 }

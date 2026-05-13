@@ -72,7 +72,6 @@ function createPosterElement(): HTMLElement {
 
   const img = document.createElement('img');
   img.className = 'posterImg';
-  img.style.width = '350px';
   img.style.height = 'auto';
   img.style.objectFit = 'cover';
   img.alt = 'film poster';
@@ -117,9 +116,10 @@ export function setPosterContainer(container: HTMLElement) {
 export function enterPoster(
   filmId: string | number,
   imageUrl: string,
-  top: number
+  top: number,
+  isPresentation: boolean = true
 ) {
-  console.log('enterPoster called:', filmId, imageUrl, top);
+  console.log('enterPoster called:', filmId, imageUrl, top, 'isPresentation:', isPresentation);
 
   // Limit to 3 animations max - remove oldest if we exceed the limit
   if (activePosterInstances.length >= 3) {
@@ -129,9 +129,23 @@ export function enterPoster(
 
   // Create new poster element for this film
   const posterEl = createPosterElement();
+  
+  // Add class based on whether it's a presentation image or fallback
+  if (isPresentation) {
+    posterEl.classList.add('presentationPoster');
+  } else {
+    posterEl.classList.add('fallbackPoster');
+  }
+  
   const img = posterEl.querySelector('img') as HTMLImageElement;
   if (img) {
+    console.log('posterHover: setting img.src ->', imageUrl);
+    // attach load/error handlers for debugging
+    img.onload = () => console.log('posterHover: img loaded', img.src, img.naturalWidth, img.naturalHeight);
+    img.onerror = () => console.warn('posterHover: img load error for', imageUrl);
     img.src = imageUrl;
+    // expose the intended source for quick DOM inspection
+    img.setAttribute('data-intended-src', imageUrl);
   }
 
   posterEl.style.opacity = '1';

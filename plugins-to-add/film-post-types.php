@@ -31,10 +31,10 @@ add_action('init', function() {
         ),
     );
 
-    // 1. FILM
+    // 1. FICTION
     register_post_type('film_film', array_merge($common_args, array(
-        'label' => 'Film',
-        'singular_name' => 'Film',
+        'label' => 'Fiction',
+        'singular_name' => 'Fiction',
         'rest_base' => 'film_film',
         'menu_icon' => 'dashicons-format-video',
         'menu_position' => 11,
@@ -67,15 +67,6 @@ add_action('init', function() {
         'menu_position' => 14,
     )));
 
-    // 5. COURS-MÉTRAGE
-    register_post_type('film_coursmetrage', array_merge($common_args, array(
-        'label' => 'Cours-Métrage',
-        'singular_name' => 'Cours-Métrage',
-        'rest_base' => 'film_coursmetrage',
-        'menu_icon' => 'dashicons-filmstrip',
-        'menu_position' => 15,
-    )));
-
 }, 0);
 
 // ==========================================
@@ -87,7 +78,7 @@ add_filter('pre_get_posts', function($query) {
         return $query;
     }
 
-    $post_types = array('film_film', 'film_pub', 'film_clip', 'film_theatre', 'film_coursmetrage');
+    $post_types = array('film_film', 'film_pub', 'film_clip', 'film_theatre');
     $current_post_type = $query->get('post_type');
 
     if (in_array($current_post_type, $post_types)) {
@@ -106,7 +97,6 @@ add_filter('manage_film_film_posts_columns', 'add_order_column');
 add_filter('manage_film_pub_posts_columns', 'add_order_column');
 add_filter('manage_film_clip_posts_columns', 'add_order_column');
 add_filter('manage_film_theatre_posts_columns', 'add_order_column');
-add_filter('manage_film_coursmetrage_posts_columns', 'add_order_column');
 
 function add_order_column($columns) {
     $columns['menu_order'] = '📍 Ordre';
@@ -117,7 +107,6 @@ add_action('manage_film_film_posts_custom_column', 'display_order_column', 10, 2
 add_action('manage_film_pub_posts_custom_column', 'display_order_column', 10, 2);
 add_action('manage_film_clip_posts_custom_column', 'display_order_column', 10, 2);
 add_action('manage_film_theatre_posts_custom_column', 'display_order_column', 10, 2);
-add_action('manage_film_coursmetrage_posts_custom_column', 'display_order_column', 10, 2);
 
 function display_order_column($column, $post_id) {
     if ($column === 'menu_order') {
@@ -134,7 +123,6 @@ add_filter('manage_edit-film_film_sortable_columns', 'make_order_sortable');
 add_filter('manage_edit-film_pub_sortable_columns', 'make_order_sortable');
 add_filter('manage_edit-film_clip_sortable_columns', 'make_order_sortable');
 add_filter('manage_edit-film_theatre_sortable_columns', 'make_order_sortable');
-add_filter('manage_edit-film_coursmetrage_sortable_columns', 'make_order_sortable');
 
 function make_order_sortable($sortable) {
     $sortable['menu_order'] = 'menu_order';
@@ -231,7 +219,7 @@ add_action('wp_ajax_film_save_order', function() {
 add_action('manage_posts_extra_tablenav', function($which) {
     if ($which === 'top') {
         $post_type = isset($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : 'post';
-        $film_types = array('film_film', 'film_pub', 'film_clip', 'film_theatre', 'film_coursmetrage');
+        $film_types = array('film_film', 'film_pub', 'film_clip', 'film_theatre');
         
         if (in_array($post_type, $film_types)) {
             echo '<input type="hidden" name="film_order_nonce" value="' . esc_attr(wp_create_nonce('film_order_nonce')) . '" />';
@@ -243,7 +231,7 @@ add_action('manage_posts_extra_tablenav', function($which) {
 // Expose ACF Fields in REST API
 // ==========================================
 
-$film_post_types = array('film_film', 'film_pub', 'film_clip', 'film_theatre', 'film_coursmetrage');
+$film_post_types = array('film_film', 'film_pub', 'film_clip', 'film_theatre');
 
 foreach ($film_post_types as $post_type) {
     $hook_name = "rest_prepare_{$post_type}";

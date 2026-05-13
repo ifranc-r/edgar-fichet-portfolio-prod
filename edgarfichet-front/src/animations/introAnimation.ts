@@ -21,6 +21,13 @@ let inactivityTimeout: ReturnType<typeof setTimeout> | null = null;
 let scrollListener: ((e: Event) => void) | null = null;
 let isIntroVisible = false;
 
+// Toggle this to `true` to re-enable the intro animation.
+const ENABLE_INTRO = true;
+
+// Disable only the automatic scrolling behavior (click/inactivity scroll).
+// Set to `false` to re-enable scrolling.
+const DISABLE_INTRO_SCROLL = true;
+
 /* ============================================
    ANIMATIONS WITH GSAP
    ============================================ */
@@ -34,12 +41,12 @@ function hideTopbar(el: HTMLElement) {
 }
 
 function scrollToElement(selector: string) {
+  // Disabled per client request: do nothing to avoid automatic scrolling.
+  if (DISABLE_INTRO_SCROLL) return;
+
   const target = document.querySelector(selector) as HTMLElement;
-  
-  if (!target) {
-    return;
-  }
-  
+  if (!target) return;
+
   gsap.to(window, {
     duration: SCROLL_DURATION,
     ease: SCROLL_EASING,
@@ -130,6 +137,9 @@ export function initializeIntroAnimations(
   introSectionEl: HTMLElement | null,
   filmEl: HTMLElement | null
 ) {
+  // Disabled per client request.
+  if (!ENABLE_INTRO) return;
+
   if (!topbarEl || !introTitleEl || !introCenterEl || !introSectionEl || !filmEl) return;
 
   gsap.set(topbarEl, { y: -100, opacity: 0 });

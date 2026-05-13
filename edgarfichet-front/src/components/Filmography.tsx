@@ -7,7 +7,14 @@ import { useEffect, useRef } from "react";
 import { enterPoster, movePoster, leavePoster } from "../animations/posterHover";
 
 // Ordre des catégories pour l'affichage
-const CATEGORY_ORDER = ["Film", "Publicité", "Clip", "Théâtre", "Cours-Métrage"];
+const CATEGORY_ORDER = ["Film", "Publicité", "Clip", "Théâtre"];
+
+const CATEGORY_LABELS: Record<string, string> = {
+  Film: 'Fiction',
+  Publicité: 'Publicité',
+  Clip: 'Clip',
+  Théâtre: 'Théâtre',
+};
 
 export default function Filmography() {
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -32,12 +39,10 @@ export default function Filmography() {
   }, {} as Record<string, typeof films>);
 
   // Trier les catégories selon l'ordre défini
-  const sortedCategories = Object.keys(filmsByCategory).sort(
-    (a, b) => CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b)
-  );
+  const sortedCategories = CATEGORY_ORDER.filter((category) => filmsByCategory[category]);
 
   const startedRef = useRef(false);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function start() {
     if (startedRef.current) return; // évite double déclenchement
@@ -48,7 +53,40 @@ export default function Filmography() {
       timerRef.current = null;
     }
 
+    // Play intro presentation sequence using image_presentation (if present).
+    // If films are not yet loaded, retry shortly.
+    if (!films || films.length === 0) {
+      console.log('Presentation: films not loaded yet, retrying in 500ms');
+      setTimeout(() => playPresentationSequence(), 500);
+    } else {
+      playPresentationSequence();
+    }
+
     smoothScrollTo(listRef.current, 3000); // durée réglable
+  }
+
+  // Play a short presentation sequence using `image_presentation` (fallback to poster)
+  function playPresentationSequence() {
+    try {
+      // pick up to 5 films in display order
+      const seq = films.slice(0, 5);
+      console.log('Presentation sequence starting for films:', seq.map(f => ({ id: f.id, image_presentation: f.image_presentation, poster: f.poster })));
+      seq.forEach((film, i) => {
+        const delay = i * 900; // ms between posters
+        setTimeout(() => {
+          const imageUrl = film.image_presentation ?? film.poster;
+          console.log(`Presentation: showing film ${film.id} using URL:`, imageUrl);
+          if (!imageUrl) return;
+          // show in center of viewport
+          const top = window.innerHeight / 2;
+          enterPoster(film.id, imageUrl, top);
+          // auto remove after animation duration (~900ms)
+          setTimeout(() => leavePoster(film.id), 1200);
+        }, delay);
+      });
+    } catch (e) {
+      console.warn('Presentation sequence failed', e);
+    }
   }
 
   function onEnter(filmId: number, el: HTMLElement) {
@@ -100,7 +138,7 @@ export default function Filmography() {
         <section ref={listRef} id="film-list" className="list">
           {sortedCategories.map((category) => (
             <div key={category} className="category-section">
-              <h2 className="category-title">{category}</h2>
+              <h2 className="category-title">{CATEGORY_LABELS[category] ?? category}</h2>
               <div className="category-films">
                 {filmsByCategory[category].map((film) => {
                   const isHover = hoveredId === film.id;
@@ -115,6 +153,11 @@ export default function Filmography() {
                         className="title"
                         onMouseEnter={(e) => onEnter(film.id, e.currentTarget)}
                         onMouseMove={onMouseMove}
+                        style={film.hasRealPresentation ? {
+                          mixBlendMode: 'difference',
+                          color: '#fff',
+                          opacity: 1,
+                        } : undefined}
                       >
                         {film.title}
                       </h3>
@@ -150,12 +193,18 @@ function HoverPosters({ hoveredId, films }: { hoveredId: number | null; films: F
     (window as any).__HOVER_POSTERS__ = {
       enter: (filmId: number, titleEl: HTMLElement) => {
         const film = films.find(f => f.id === filmId);
-        if (!film || !film.poster) return;
+        if (!film) return;
+
+        const imageUrl = film.image_presentation;
+        if (!imageUrl) {
+          console.warn('Hover image missing image_presentation for film:', filmId, film);
+          return;
+        }
 
         const titleRect = titleEl.getBoundingClientRect();
         const topPosition = titleRect.top + window.scrollY;
 
-        enterPoster(filmId, film.poster, topPosition);
+        enterPoster(filmId, imageUrl, topPosition);
       },
       leave: () => {
         if (hoveredId) {

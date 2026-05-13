@@ -25,6 +25,9 @@ services:
       WORDPRESS_DB_USER: ${MYSQL_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
       WORDPRESS_TABLE_PREFIX: ${WP_TABLE_PREFIX}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', '${WP_PUBLIC_URL}');
+        define('WP_SITEURL', '${WP_PUBLIC_URL}');
     volumes:
       - wp_data:/var/www/html
     restart: unless-stopped
