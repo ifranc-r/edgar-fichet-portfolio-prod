@@ -1,0 +1,9 @@
+
+> edgarfichet-front@0.0.0 preview
+> vite preview --host 0.0.0.0 --port 4173
+
+  ➜  Local:   http://localhost:4173/
+  ➜  Network: http://165.232.103.177:4173/
+  ➜  Network: http://10.16.0.5:4173/
+  ➜  Network: http://10.106.0.2:4173/
+  ➜  Network: http://172.18.0.1:4173/

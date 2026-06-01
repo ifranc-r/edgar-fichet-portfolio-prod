@@ -452,3 +452,83 @@ html, body {
 .popupFooter strong {
   opacity: 0.8;
 }
+
+
+
+#connect {
+    font-family: 'Terminal-Grotesque', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 240px;
+    margin-bottom: 100px;
+}
+
+#connect .inner {
+  width: 100%;
+}
+
+.md-hide h1 {
+  margin: 0 0 1.5rem;
+  color: #fff;
+  font-family: 'Terminal-Grotesque', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#connect h4 {
+  margin: 0 0 2rem;
+  color: #fff;
+  font-family: 'Terminal-Grotesque', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.list-connect {
+  gap: 3rem;  
+  text-align: center;
+  text-align: -webkit-center;
+
+}
+
+
+#connect .list-connect p{
+  display: inline-block;
+  vertical-align: baseline;
+  color: white;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  opacity: 0.8; 
+  text-decoration: none;
+
+}
+
+#connect .list-connect p a{
+  text-decoration: none;
+  color: white;
+  text-align: -webkit-center;
+}
+.table-row-connect {
+  display: inline-flex;
+  gap: 4rem;
+  align-items: center;
+}
+
+.table-row-connect > div {
+  display: inline-flex;
+}
+
+a {
+    text-decoration: none;
+}

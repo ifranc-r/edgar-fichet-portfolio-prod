@@ -295,19 +295,31 @@ export default function App() {
                 <h2>{selectedFilm.title}</h2>
                 {selectedFilm.synopsis && (
                   <div className="popupDescription">
-                    <strong>synopsis :</strong>
                     <p>{selectedFilm.synopsis}</p>
                   </div>
                 )}
                 <div className="popupFooter">
-                  <p><strong>poste: </strong>{selectedFilm.role}</p>
-                  <p><strong>annee: </strong>{selectedFilm.year}</p>
+                  <p>{selectedFilm.role}</p>
+                  <p>{selectedFilm.year}</p>
                 </div>
               </div>
             </div>
           </div>
         </>
       )}
+
+      {/* Footer */}
+      <section id="connect">
+          <div className="md-hide">
+            <h2>
+              <p>-------------------------------------------------</p>
+              <span className="topbarCta"><a className="topbarCtaText" href="mailto:edgarfichet@gmail.com">edgarfichet@gmail.com</a></span>
+              <p>-------------------------------------------------</p>
+              <span className="topbarCta"><a className="topbarCtaText" href="https://www.imdb.com/fr/name/nm8061628/" rel="noopener noreferrer" target="_blank">IMDB</a></span>
+              <p>-------------------------------------------------</p>
+            </h2>
+          </div>
+      </section>
     </div>
   );
 }

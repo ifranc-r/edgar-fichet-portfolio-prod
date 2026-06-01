@@ -211,6 +211,9 @@ add_action('wp_ajax_film_save_order', function() {
         'ID' => $post_id,
         'menu_order' => $order,
     ));
+
+    // Keep a dedicated order meta in sync with drag & drop order
+    update_post_meta($post_id, 'order', $order);
     
     wp_send_json_success('Order saved');
 });
@@ -233,22 +236,38 @@ add_action('manage_posts_extra_tablenav', function($which) {
 
 $film_post_types = array('film_film', 'film_pub', 'film_clip', 'film_theatre');
 
+function film_get_acf_or_meta($field_key, $post_id) {
+    if (function_exists('get_field')) {
+        return get_field($field_key, $post_id);
+    }
+    return get_post_meta($post_id, $field_key, true);
+}
+
 foreach ($film_post_types as $post_type) {
     $hook_name = "rest_prepare_{$post_type}";
     
     add_filter($hook_name, function($response, $post) {
+        $image = film_get_acf_or_meta('image', $post->ID);
+        $image_presentation = film_get_acf_or_meta('image_presentation', $post->ID);
+        $dragdrop_order = film_get_acf_or_meta('order', $post->ID);
+
+        if ($dragdrop_order === '' || $dragdrop_order === null) {
+            $dragdrop_order = get_post($post->ID)->menu_order;
+        }
+
         $acf_fields = array(
-            'realisateur' => get_field('realisateur', $post->ID),
-            'poste' => get_field('poste', $post->ID),
-            'annee' => get_field('annee', $post->ID),
-            'image' => get_field('image', $post->ID),
-            'synopsis' => get_field('synopsis', $post->ID),
-            'category' => get_field('category', $post->ID),
-            'order' => get_post($post->ID)->menu_order,
+            'realisateur' => film_get_acf_or_meta('realisateur', $post->ID),
+            'poste' => film_get_acf_or_meta('poste', $post->ID),
+            'annee' => film_get_acf_or_meta('annee', $post->ID),
+            'image' => $image,
+            'image_presentation' => $image_presentation,
+            'synopsis' => film_get_acf_or_meta('synopsis', $post->ID),
+            'category' => film_get_acf_or_meta('category', $post->ID),
+            'order' => (int) $dragdrop_order,
         );
         
         $response->data['acf'] = $acf_fields;
-        $response->data['featured_media'] = get_field('image', $post->ID) ?: 0;
+        $response->data['featured_media'] = $image ?: 0;
         
         return $response;
     }, 10, 2);
