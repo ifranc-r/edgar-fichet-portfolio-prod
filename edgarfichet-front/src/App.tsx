@@ -212,6 +212,7 @@ export default function App() {
           >
             <span className="topbarCtaText">Théatre</span> <span className="topbarArrow">{getCategoryIndicator('Théatre')}</span>
           </p>
+          <span className="topbarCta"><a className="topbarCtaText" href="https://www.imdb.com/fr/name/nm8061628/" rel="noopener noreferrer" target="_blank">---IMDB---</a></span>
         </div>
       </div>
 
