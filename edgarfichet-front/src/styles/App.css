@@ -125,6 +125,12 @@ html, body {
   cursor: pointer;
 }
 
+.topbarCta a.topbarCtaText,
+.topbarCta a.topbarCtaText:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
 /* INTRO */
 
 .intro {
