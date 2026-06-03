@@ -24,9 +24,9 @@ type WPFilm = {
     poste?: string;
     annee?: string | number;
     image?: number | string;
-      image_presentation?: number | string;
+    image_presentation?: number | string;
     order?: string | number;
-      titre_film?: string;
+    titre_film?: string;
     synopsis?: string;
     category?: string;
     url?: string;
@@ -62,7 +62,7 @@ export function useFilms() {
         }
 
         const wpFilms = allFilms;
-
+        console.log(`Fetched ${wpFilms.length} films from API`, wpFilms);
         const mappedFilms = await Promise.all(
           wpFilms.map(async (film) => {
             const acf = film.acf ?? {};
