@@ -245,6 +245,7 @@ foreach ($film_post_types as $post_type) {
             'synopsis' => get_field('synopsis', $post->ID),
             'category' => get_field('category', $post->ID),
             'order' => get_post($post->ID)->menu_order,
+            'url' => get_field('url', $post->ID),
         );
         
         $response->data['acf'] = $acf_fields;
