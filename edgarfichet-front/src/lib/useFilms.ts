@@ -12,6 +12,7 @@ export interface Film {
   order?: number | null;
   synopsis?: string;
   category?: string;
+  url?: string;
 }
 
 type WPFilm = {
@@ -28,6 +29,7 @@ type WPFilm = {
       titre_film?: string;
     synopsis?: string;
     category?: string;
+    url?: string;
   };
 };
 
@@ -119,6 +121,7 @@ export function useFilms() {
               order: acf.order !== undefined && acf.order !== null ? Number(acf.order) : null,
               synopsis: acf.synopsis ?? '',
               category: acf.category ?? 'Film',
+              url: acf.url ?? '',
             };
           })
         );
