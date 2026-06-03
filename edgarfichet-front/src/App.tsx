@@ -55,12 +55,11 @@ export default function App() {
   const categoryLabels: { [key: string]: string } = {
     'Film': 'Fiction',
     'Pub': 'Publicités',
-    'Clip': 'Clips',
-    'Théatre': 'Théatre'
+    'Clip': 'Divers',
   };
 
   // Define the order of categories to display
-  const categoryOrder = ['Film', 'Pub', 'Clip', 'Théatre'];
+  const categoryOrder = ['Film', 'Pub', 'Clip'];
   const orderedCategories = categoryOrder.filter(category => filmsByCategory[category]);
 
   // Initialize poster container on mount
@@ -204,13 +203,7 @@ export default function App() {
             className={`topbarCta ${activeCategory === 'Clip' ? 'active' : ''}`}
             onClick={() => scrollToCategory('Clip')}
           >
-            <span className="topbarCtaText">Clips</span> <span className="topbarArrow">{getCategoryIndicator('Clip')}</span>
-          </p>
-          <p 
-            className={`topbarCta ${activeCategory === 'Théatre' ? 'active' : ''}`}
-            onClick={() => scrollToCategory('Théatre')}
-          >
-            <span className="topbarCtaText">Théatre</span> <span className="topbarArrow">{getCategoryIndicator('Théatre')}</span>
+            <span className="topbarCtaText">Divers</span> <span className="topbarArrow">{getCategoryIndicator('Clip')}</span>
           </p>
           <span className="topbarCta"><a className="topbarCtaText" href="https://www.imdb.com/fr/name/nm8061628/" rel="noopener noreferrer" target="_blank">---IMDB---</a></span>
         </div>
