@@ -80,6 +80,7 @@ html, body {
 .topbarRight {
   flex: 1;
   text-align: right;
+  padding-top: 35px;
 }
 
 .topbarCta {
@@ -89,7 +90,7 @@ html, body {
   font-size: 1.25rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  margin: 0;
+  margin: -7px;
   color: #fff;
   cursor: pointer;
   transition: opacity 0.3s ease;
@@ -123,12 +124,6 @@ html, body {
   -ms-transform: scale(-1, -1);
   transform: scale(-1, -1);
   cursor: pointer;
-}
-
-.topbarCta a.topbarCtaText,
-.topbarCta a.topbarCtaText:visited {
-  color: #fff;
-  text-decoration: none;
 }
 
 /* INTRO */
@@ -458,6 +453,7 @@ html, body {
 .popupFooter strong {
   opacity: 0.8;
 }
+
 
 
 #connect {
