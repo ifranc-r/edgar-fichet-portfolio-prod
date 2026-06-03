@@ -74,7 +74,7 @@ html, body {
   margin: 0;
   color: #fff;
   font-weight: 400;
-  cursor: pointer;
+  cursor: default;
 }
 
 .topbarRight {
@@ -129,7 +129,7 @@ html, body {
 /* INTRO */
 
 .intro {
-  cursor: pointer;
+  cursor: default;
   height: 100vh;
   display: grid;
   place-items: center;
@@ -141,7 +141,7 @@ html, body {
 
 .introCenter {
   text-align: center;
-  cursor: pointer;
+  cursor: default;
   user-select: none;
 }
 
@@ -212,6 +212,7 @@ html, body {
   margin-top: 240px;
   margin-bottom: 100px;
   color: red;
+  cursor: default;
 }
 
 .filmTypeTitle:hover {
