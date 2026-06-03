@@ -13,6 +13,7 @@ export interface Film {
   synopsis?: string;
   category?: string;
   url?: string;
+  prod?: string;
 }
 
 type WPFilm = {
@@ -30,6 +31,7 @@ type WPFilm = {
     synopsis?: string;
     category?: string;
     url?: string;
+    prod?: string;
   };
 };
 
@@ -122,6 +124,7 @@ export function useFilms() {
               synopsis: acf.synopsis ?? '',
               category: acf.category ?? 'Film',
               url: acf.url ?? '',
+              prod: acf.prod ?? '',
             };
           })
         );

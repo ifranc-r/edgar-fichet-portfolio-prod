@@ -295,6 +295,7 @@ export default function App() {
                 <div className="popupFooter">
                   <p>{selectedFilm.role}</p>
                   <p>{selectedFilm.year}</p>
+                  <p>{selectedFilm.prod}</p>
                   <p><a className="popupLink" href={selectedFilm.url} rel="noopener noreferrer" target="_blank">- - IMDB - -</a></p>
                 </div>
               </div>
