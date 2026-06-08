@@ -80,25 +80,36 @@ export function useFilms() {
                 // - a numeric ID (number)
                 // - a numeric ID as a string ("123")
                 async function resolveMediaField(value: any) {
-                  if (!value && value !== 0) return '';
-                  // direct URL
-                  if (typeof value === 'string' && value.startsWith('http')) return value;
-                  // numeric string -> coerce
-                  const maybeNumber = typeof value === 'number' ? value : parseInt(value, 10);
+                  if (value === null || value === undefined || value === '') return '';
+
+                  // 1) URL string (absolute or relative)
+                  if (typeof value === 'string') {
+                    if (value.startsWith('http://') || value.startsWith('https://')) return value;
+                    if (value.startsWith('/')) return `${window.location.origin}${value}`;
+                  }
+
+                  // 2) ACF image object (prod case)
+                  if (typeof value === 'object') {
+                    if (typeof value.source_url === 'string' && value.source_url) return value.source_url;
+                    if (typeof value.url === 'string' && value.url) return value.url;
+
+                    const objectId = value.ID ?? value.id;
+                    if (objectId) value = objectId;
+                  }
+
+                  // 3) Numeric ID (number or numeric string)
+                  const maybeNumber = typeof value === 'number' ? value : parseInt(String(value), 10);
                   if (!Number.isNaN(maybeNumber) && maybeNumber > 0) {
                     try {
                       const mediaRes = await fetch(`/wp/?rest_route=/wp/v2/media/${maybeNumber}`);
-                      if (!mediaRes.ok) {
-                        console.warn(`Media fetch failed for film ${film.id}, media ${maybeNumber}: ${mediaRes.status}`);
-                        return '';
-                      }
-                      const mediaData = (await mediaRes.json()) as WPMedia;
-                      return mediaData.source_url ?? '';
-                    } catch (err) {
-                      console.warn(`Failed to fetch media ${maybeNumber} for film ${film.id}`, err);
+                      if (!mediaRes.ok) return '';
+                      const mediaData = await mediaRes.json();
+                      return mediaData?.source_url ?? '';
+                    } catch {
                       return '';
                     }
                   }
+
                   return '';
                 }
 
