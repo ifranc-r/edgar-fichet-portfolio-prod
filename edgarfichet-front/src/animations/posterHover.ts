@@ -5,7 +5,7 @@ import gsap from 'gsap';
    Adjust these values to tweak the animation
    ============================================ */
 
-const TOP_OFFSET = -185;  // Négatif = remonte, positif = descend
+const TOP_OFFSET = -150;  // Négatif = remonte, positif = descend
    // Position settings
 const START_X = -35; // Far left (off-screen)
 const END_X = 150;    // Far right (off-screen)
