@@ -8,8 +8,10 @@ export default function App() {
   const [activeItemId, setActiveItemId] = useState<string | number | null>(null);
   const [selectedFilm, setSelectedFilm] = useState<any>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [isMobileInteraction, setIsMobileInteraction] = useState(false);
   const posterContainerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+  const mobileCenterActiveIdRef = useRef<string | null>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const introNameRef = useRef<HTMLHeadingElement>(null);
   const introCenterRef = useRef<HTMLDivElement>(null);
@@ -61,6 +63,16 @@ export default function App() {
   // Define the order of categories to display
   const categoryOrder = ['Film', 'Pub', 'Clip'];
   const orderedCategories = categoryOrder.filter(category => filmsByCategory[category]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 900px), (hover: none) and (pointer: coarse)');
+    const update = () => setIsMobileInteraction(mq.matches);
+
+    update();
+    mq.addEventListener('change', update);
+
+    return () => mq.removeEventListener('change', update);
+  }, []);
 
   // Initialize poster container on mount
   useEffect(() => {
@@ -139,7 +151,108 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (!activeItemId) return;
+    if (!isMobileInteraction || films.length === 0) return;
+
+    const filmById = new Map(films.map((film: any) => [String(film.id), film]));
+    const ENTER_TOLERANCE_PX = 56;
+    const EXIT_TOLERANCE_PX = 90;
+
+    const clearActive = () => {
+      const currentId = mobileCenterActiveIdRef.current;
+      if (!currentId) return;
+
+      const currentEl = itemRefs.current[currentId];
+      if (currentEl) currentEl.classList.remove('isHover');
+
+      leavePoster(currentId);
+      setActiveItemId(null);
+      mobileCenterActiveIdRef.current = null;
+    };
+
+    const activateFilm = (filmId: string, titleCenterY: number) => {
+      if (mobileCenterActiveIdRef.current === filmId) {
+        movePoster(filmId, titleCenterY);
+        return;
+      }
+
+      clearActive();
+
+      const film = filmById.get(filmId);
+      if (!film) return;
+
+      const imageUrl = film.image_presentation ?? film.poster;
+      if (!imageUrl) return;
+
+      const itemEl = itemRefs.current[filmId];
+      if (itemEl) itemEl.classList.add('isHover');
+
+      enterPoster(filmId, imageUrl, titleCenterY, !!film.hasRealPresentation);
+      setActiveItemId(filmId);
+      mobileCenterActiveIdRef.current = filmId;
+    };
+
+    const pickFilmAtCenter = () => {
+      const centerY = window.innerHeight / 2;
+      let bestId: string | null = null;
+      let bestDistance = Number.POSITIVE_INFINITY;
+      let bestTitleCenterY = centerY;
+
+      Object.values(itemRefs.current).forEach((itemEl) => {
+        if (!itemEl) return;
+
+        const titleEl = itemEl.querySelector('.title') as HTMLElement | null;
+        if (!titleEl) return;
+
+        const rect = titleEl.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+
+        const titleCenterY = rect.top + rect.height / 2;
+        const distance = Math.abs(titleCenterY - centerY);
+
+        if (distance < bestDistance) {
+          const filmId = itemEl.getAttribute('data-film-id');
+          if (!filmId) return;
+          bestDistance = distance;
+          bestId = filmId;
+          bestTitleCenterY = titleCenterY;
+        }
+      });
+
+      const currentId = mobileCenterActiveIdRef.current;
+
+      if (bestId && bestDistance <= ENTER_TOLERANCE_PX) {
+        activateFilm(bestId, bestTitleCenterY);
+        return;
+      }
+
+      if (currentId && bestId === currentId && bestDistance <= EXIT_TOLERANCE_PX) {
+        movePoster(currentId, bestTitleCenterY);
+        return;
+      }
+
+      clearActive();
+    };
+
+    let rafId = 0;
+    const onScrollOrResize = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(pickFilmAtCenter);
+    };
+
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
+    pickFilmAtCenter();
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', onScrollOrResize);
+      window.removeEventListener('resize', onScrollOrResize);
+      clearActive();
+    };
+  }, [isMobileInteraction, films]);
+
+  useEffect(() => {
+    if (isMobileInteraction || !activeItemId) return;
 
     const itemEl = itemRefs.current[activeItemId];
     if (!itemEl) return;
@@ -152,7 +265,18 @@ export default function App() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeItemId]);
+  }, [activeItemId, isMobileInteraction]);
+
+  useEffect(() => {
+    if (!selectedFilm) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [selectedFilm]);
 
   // Scroll to category
   const scrollToCategory = (category: string) => {
@@ -232,11 +356,20 @@ export default function App() {
                   <div
                     key={film.id}
                     className={`item ${film.hasRealPresentation ? 'hasPresentation' : ''}`}
+                    data-film-id={String(film.id)}
                     ref={(el) => {
-                      if (el) itemRefs.current[film.id] = el;
+                      itemRefs.current[film.id] = el;
                     }}
-                    onMouseEnter={() => handleMouseEnter(film, itemRefs.current[film.id]!)}
-                    onMouseLeave={() => handleMouseLeave(film, itemRefs.current[film.id]!)}
+                    onMouseEnter={() => {
+                      if (isMobileInteraction) return;
+                      const el = itemRefs.current[film.id];
+                      if (el) handleMouseEnter(film, el);
+                    }}
+                    onMouseLeave={() => {
+                      if (isMobileInteraction) return;
+                      const el = itemRefs.current[film.id];
+                      if (el) handleMouseLeave(film, el);
+                    }}
                   >
                     <h3
                       className="title"
