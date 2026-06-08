@@ -317,9 +317,6 @@ export default function App() {
             </h2>
           </div>
         </div>
-        <pre>
-          {JSON.stringify(selectedFilm, null, 2)}
-        </pre>
       </section>
     </div>
   );
