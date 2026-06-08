@@ -487,7 +487,7 @@ export default function App() {
                   )}
                 </div>
 
-                {popupImages.length > 0 && (
+                {isMobileInteraction && popupImages.length > 0 && (
                   <div className="popupGalleryThumbs">
                     {popupImages.map((src: string, index: number) => (
                       <button
@@ -515,6 +515,21 @@ export default function App() {
                   <p>{selectedFilm.prod}</p>
                   <p><a className="popupLink" href={selectedFilm.url} rel="noopener noreferrer" target="_blank">- - IMDB - -</a></p>
                 </div>
+
+                {!isMobileInteraction && popupImages.length > 0 && (
+                  <div className="popupGalleryThumbs">
+                    {popupImages.map((src: string, index: number) => (
+                      <button
+                        key={`${src}-${index}`}
+                        type="button"
+                        className="popupThumbBtn"
+                        onClick={() => openLightboxFor(src)}
+                      >
+                        <img src={src} alt={`${selectedFilm.title} photo ${index + 1}`} />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -346,21 +346,40 @@ html, body {
 }
 
 .filmPopup {
+  width: min(94vw, 1200px);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #1a1a1a;
-  padding: 2rem;
-  max-width: 800px;
-  width: 90%;
-  max-height: 80vh;
+  padding: 0rem;
+  max-width: 1000px;
+  width: 100%;
+
+  max-height: none;         /* évite la limite 80vh */
   overflow-y: auto;
   z-index: 1000;
   color: #fff;
   font-family: 'Terminal-Grotesque', sans-serif;
 }
 
+@media (min-width: 901px) {
+  .filmPopup {
+    width: min(94vw, 1200px);
+    max-width: 1200px;
+
+    height: min(62vh, 920px); /* force la taille visible */
+    max-height: none;         /* évite la limite 80vh */
+  }
+
+  .popupMedia {
+    width: 360px;
+  }
+
+  .popupImage {
+    height: 480px;
+  }
+}
 .popupClose {
   position: absolute;
   top: 1rem;
@@ -394,7 +413,7 @@ html, body {
 
 .popupImage {
   width: 100%;
-  height: 350px;
+  height: 480px;
   background-color: #000;
   display: flex;
   align-items: center;
@@ -417,10 +436,10 @@ html, body {
 
 .popupThumbBtn {
   appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 0px solid rgba(255, 255, 255, 0.14);
   background: #0f0f0f;
   padding: 0;
-  border-radius: 6px;
+  border-radius: 0px;
   overflow: hidden;
   cursor: pointer;
 }
@@ -454,6 +473,7 @@ html, body {
 
 .popupDescription {
   margin-bottom: 2rem;
+  margin-right: 30px;
   flex: 1;
 }
 
@@ -488,6 +508,12 @@ html, body {
   opacity: 0.8;
 }
 
+@media (min-width: 901px) {
+  .popupContent .popupGalleryThumbs {
+    margin-top: 1rem;
+  }
+}
+
 .lightboxBackdrop {
   position: fixed;
   inset: 0;
@@ -518,7 +544,7 @@ html, body {
   width: 42px;
   height: 42px;
   border: none;
-  border-radius: 999px;
+  border-radius: 0px;
   background: transparent;
   color: #fff;
   font-size: 1.3rem;
@@ -533,7 +559,7 @@ html, body {
   width: 46px;
   height: 46px;
   border: none;
-  border-radius: 999px;
+  border-radius: 0px;
   background: transparent;
   color: #fff;
   font-size: 2rem;
@@ -719,25 +745,27 @@ a:hover {
   .filmPopup {
     left: 0.5rem;
     right: 0.5rem;
-    top: auto;
+    top: 10px;
     bottom: 0.5rem;
     transform: none;
     width: auto;
     max-width: none;
     max-height: 88dvh;
-    padding: 1rem 1rem 1.25rem;
+    padding: 1.5rem 1rem 1.25rem;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   .popupClose {
-    top: 0.6rem;
-    right: 0.6rem;
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    font-size: 1.6rem;
-    line-height: 1;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 0.35rem;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+  position: fixed;
   }
 
   .popupContainer {
@@ -761,7 +789,7 @@ a:hover {
   }
 
   .popupThumbBtn {
-    border-radius: 8px;
+    border-radius: 0px;
   }
 
   .popupContent h2 {
