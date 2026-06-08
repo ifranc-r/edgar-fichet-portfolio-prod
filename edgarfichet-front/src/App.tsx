@@ -7,6 +7,7 @@ export default function App() {
   const { films, error } = useFilms();
   const [activeItemId, setActiveItemId] = useState<string | number | null>(null);
   const [selectedFilm, setSelectedFilm] = useState<any>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isMobileInteraction, setIsMobileInteraction] = useState(false);
   const posterContainerRef = useRef<HTMLDivElement>(null);
@@ -278,6 +279,10 @@ export default function App() {
     };
   }, [selectedFilm]);
 
+  useEffect(() => {
+    setLightboxIndex(null);
+  }, [selectedFilm]);
+
   // Scroll to category
   const scrollToCategory = (category: string) => {
     const element = document.querySelector(`[data-category="${category}"]`);
@@ -301,6 +306,64 @@ export default function App() {
       return '\\/'; // En-dessous
     }
   };
+
+  const popupImages = selectedFilm
+    ? Array.from(
+        new Set(
+          [
+            ...(selectedFilm.gallery ?? []),
+            selectedFilm.poster,
+            selectedFilm.image_presentation,
+          ].filter(Boolean)
+        )
+      ).slice(0, 5)
+    : [];
+
+  const openLightboxFor = (src: string) => {
+    const index = popupImages.findIndex((image: string) => image === src);
+    if (index >= 0) {
+      setLightboxIndex(index);
+      return;
+    }
+    setLightboxIndex(0);
+  };
+
+  const closeLightbox = () => setLightboxIndex(null);
+
+  const goPrevLightbox = () => {
+    if (lightboxIndex === null || popupImages.length <= 1) return;
+    setLightboxIndex((lightboxIndex - 1 + popupImages.length) % popupImages.length);
+  };
+
+  const goNextLightbox = () => {
+    if (lightboxIndex === null || popupImages.length <= 1) return;
+    setLightboxIndex((lightboxIndex + 1) % popupImages.length);
+  };
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeLightbox();
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        goPrevLightbox();
+        return;
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        goNextLightbox();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [lightboxIndex, popupImages.length]);
 
   return (
     <div className="page">
@@ -413,9 +476,30 @@ export default function App() {
           <div className="filmPopup">
             <button className="popupClose" onClick={() => setSelectedFilm(null)}>✕</button>
             <div className="popupContainer">
-              <div className="popupImage">
-                {selectedFilm.poster && (
-                  <img src={selectedFilm.poster} alt={selectedFilm.title} />
+              <div className="popupMedia">
+                <div className="popupImage">
+                  {selectedFilm.poster && (
+                    <img
+                      src={selectedFilm.poster}
+                      alt={selectedFilm.title}
+                      onClick={() => openLightboxFor(selectedFilm.poster)}
+                    />
+                  )}
+                </div>
+
+                {popupImages.length > 0 && (
+                  <div className="popupGalleryThumbs">
+                    {popupImages.map((src: string, index: number) => (
+                      <button
+                        key={`${src}-${index}`}
+                        type="button"
+                        className="popupThumbBtn"
+                        onClick={() => openLightboxFor(src)}
+                      >
+                        <img src={src} alt={`${selectedFilm.title} photo ${index + 1}`} />
+                      </button>
+                    ))}
+                  </div>
                 )}
               </div>
               <div className="popupContent">
@@ -434,6 +518,21 @@ export default function App() {
               </div>
             </div>
           </div>
+
+          {lightboxIndex !== null && popupImages[lightboxIndex] && (
+            <div className="lightboxBackdrop" onClick={closeLightbox}>
+              <div className="lightboxContent" onClick={(event) => event.stopPropagation()}>
+                {popupImages.length > 1 && (
+                  <>
+                    <button className="lightboxNav lightboxNavPrev" onClick={goPrevLightbox} aria-label="Image precedente">‹</button>
+                    <button className="lightboxNav lightboxNavNext" onClick={goNextLightbox} aria-label="Image suivante">›</button>
+                  </>
+                )}
+                <button className="lightboxClose" onClick={closeLightbox}>✕</button>
+                <img className="lightboxImage" src={popupImages[lightboxIndex]} alt={selectedFilm.title} />
+              </div>
+            </div>
+          )}
         </>
       )}
 

@@ -14,6 +14,7 @@ export interface Film {
   category?: string;
   url?: string;
   prod?: string;
+  gallery?: string[];
 }
 
 type WPFilm = {
@@ -26,6 +27,11 @@ type WPFilm = {
     annee?: string | number;
     image?: number | string;
     image_presentation?: number | string;
+    image_popup_1?: number | string;
+    image_popup_2?: number | string;
+    image_popup_3?: number | string;
+    image_popup_4?: number | string;
+    image_popup_5?: number | string;
     order?: string | number;
     titre_film?: string;
     synopsis?: string;
@@ -98,6 +104,15 @@ export function useFilms() {
 
                 const posterUrl = await resolveMediaField(acf.image);
                 const presentationUrl = await resolveMediaField(acf.image_presentation);
+                const popupGallery = (
+                  await Promise.all([
+                    resolveMediaField(acf.image_popup_1),
+                    resolveMediaField(acf.image_popup_2),
+                    resolveMediaField(acf.image_popup_3),
+                    resolveMediaField(acf.image_popup_4),
+                    resolveMediaField(acf.image_popup_5),
+                  ])
+                ).filter(Boolean);
                 const imagePresentationUrl = presentationUrl || posterUrl;
                 const hasRealPresentation = !!presentationUrl;
 
@@ -125,6 +140,7 @@ export function useFilms() {
               category: acf.category ?? 'Film',
               url: acf.url ?? '',
               prod: acf.prod ?? '',
+              gallery: popupGallery,
             };
           })
         );
