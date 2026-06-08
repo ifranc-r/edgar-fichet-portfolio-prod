@@ -5,7 +5,7 @@ import gsap from 'gsap';
    Adjust these values to tweak the animation
    ============================================ */
 
-const TOP_OFFSET = -150;  // Négatif = remonte, positif = descend
+const TOP_OFFSET = -185;  // Négatif = remonte, positif = descend
    // Position settings
 const START_X = -35; // Far left (off-screen)
 const END_X = 150;    // Far right (off-screen)
@@ -246,7 +246,7 @@ export function movePoster(filmId: string | number, top: number) {
   const instances = activePosterInstances.filter(p => p.filmId === filmId);
   instances.forEach(instance => {
     gsap.to(instance.element, {
-      top: `${top}px`,
+      top: `${top + TOP_OFFSET}px`,
       duration: 0.3,
       ease: MOVE_EASING,
       overwrite: 'auto',

@@ -675,7 +675,7 @@ a:hover {
 
   .item.isHover .title {
     opacity: 1;
-    mix-blend-mode: normal;
+    mix-blend-mode: difference;
   }
 
   .item.isHover .meta {

@@ -238,10 +238,17 @@ foreach ($film_post_types as $post_type) {
     
     add_filter($hook_name, function($response, $post) {
         $acf_fields = array(
+            'titre_film' => get_field('titre_film', $post->ID),
             'realisateur' => get_field('realisateur', $post->ID),
             'poste' => get_field('poste', $post->ID),
             'annee' => get_field('annee', $post->ID),
             'image' => get_field('image', $post->ID),
+            'image_presentation' => get_field('image_presentation', $post->ID),
+            'image_popup_1' => get_field('image_popup_1', $post->ID),
+            'image_popup_2' => get_field('image_popup_2', $post->ID),
+            'image_popup_3' => get_field('image_popup_3', $post->ID),
+            'image_popup_4' => get_field('image_popup_4', $post->ID),
+            'image_popup_5' => get_field('image_popup_5', $post->ID),
             'synopsis' => get_field('synopsis', $post->ID),
             'category' => get_field('category', $post->ID),
             'order' => get_post($post->ID)->menu_order,
