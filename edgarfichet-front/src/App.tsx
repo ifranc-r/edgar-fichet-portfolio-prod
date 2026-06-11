@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useFilms } from './lib/useFilms';
 import { enterPoster, movePoster, leavePoster, setPosterContainer } from './animations/posterHover';
 import { initializeIntroAnimations, cleanupIntroAnimations } from './animations/introAnimation';
+import { preloadPosters } from './animations/posterPreload';
 
 export default function App() {
   const { films, error } = useFilms();
@@ -74,6 +75,44 @@ export default function App() {
 
     return () => mq.removeEventListener('change', update);
   }, []);
+
+  useEffect(() => {
+    if (films.length === 0) return;
+
+    const posterUrls = films
+      .flatMap((film: any) => [film.image_presentation ?? film.poster, film.poster, ...(film.gallery ?? [])])
+      .filter(Boolean);
+
+    const priority = posterUrls.slice(0, 12);
+    const deferred = posterUrls.slice(12);
+
+    void preloadPosters(priority, 6);
+
+    let timeoutId: number | null = null;
+    let idleId: number | null = null;
+    const idleWindow = window as Window & {
+      requestIdleCallback?: (callback: () => void) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+
+    const runDeferred = () => {
+      if (deferred.length === 0) return;
+      void preloadPosters(deferred, 4);
+    };
+
+    if (typeof idleWindow.requestIdleCallback === 'function') {
+      idleId = idleWindow.requestIdleCallback(runDeferred);
+    } else {
+      timeoutId = window.setTimeout(runDeferred, 250);
+    }
+
+    return () => {
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
+      if (idleId !== null && typeof idleWindow.cancelIdleCallback === 'function') {
+        idleWindow.cancelIdleCallback(idleId);
+      }
+    };
+  }, [films]);
 
   // Initialize poster container on mount
   useEffect(() => {

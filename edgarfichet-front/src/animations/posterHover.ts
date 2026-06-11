@@ -1,4 +1,5 @@
 import gsap from 'gsap';
+import { preloadPoster } from './posterPreload';
 
 /* ============================================
    ANIMATION SETTINGS
@@ -19,7 +20,7 @@ const ROTATION_SHIFT = 100; // Total rotation change from start to end
 
 // Slowdown settings (hover effect)
 const SLOWDOWN_START = 0.33;       // Commence ralentissement progressif à 33%
-const SLOWDOWN_CHECKPOINT = 0.43;  // Point où la vitesse minimale est atteinte
+const SLOWDOWN_CHECKPOINT = 0.38;  // Point où la vitesse minimale est atteinte
 const SLOWDOWN_SPEED = 0.005;      // Vitesse minimale (bullet time)
 const SPEEDUP_ZONE = 0.04;         // Zone de transition inverse (7% après fin d'hover)
 
@@ -119,6 +120,8 @@ export function enterPoster(
   top: number,
   isPresentation: boolean = true
 ) {
+  // Ensure loading starts as early as possible when preload was not already triggered.
+  preloadPoster(imageUrl);
   console.log('enterPoster called:', filmId, imageUrl, top, 'isPresentation:', isPresentation);
 
   // Limit to 3 animations max - remove oldest if we exceed the limit
